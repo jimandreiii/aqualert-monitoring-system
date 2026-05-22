@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Personal Flood Monitor</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            background: #1e1e1e;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid #333;
+        }
+        h1 { color: #aaaaaa; font-size: 24px; }
+        .data-box {
+            font-size: 64px;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #00d2ff;
+        }
+        .status-badge {
+            font-size: 20px;
+            padding: 10px 30px;
+            border-radius: 50px;
+            font-weight: bold;
+            text-transform: uppercase;
+            display: inline-block;
+        }
+        /* Dynamic Styles for Statuses */
+        .safe { background-color: #2ed573; color: #fff; }
+        .caution { background-color: #ffa502; color: #fff; }
+        .danger { background-color: #ff4757; color: #fff; animation: blink 1s infinite; }
+        
+        @keyframes blink {
+            0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>🌊 Live Flood Dashboard</h1>
+        
+        <div class="data-box" id="waterLevel">--</div>
+        
+        <div class="status-badge safe" id="statusLabel">LOADING...</div>
+    </div>
+
+    <script>
+        // Replace with your real Blynk Auth Token
+        const BLYNK_TOKEN = "gHS7cRliApxnJJm6q-VZWic4VTBc4h3J"; 
+        
+        // Blynk API endpoints for your two datastreams (V0 and V1)
+        const urlV0 = `https://blynk.cloud/external/api/get?token=${BLYNK_TOKEN}&v0`;
+        const urlV1 = `https://blynk.cloud/external/api/get?token=${BLYNK_TOKEN}&v1`;
+
+        async function fetchBlynkData() {
+            try {
+                // 1. Fetch numeric water level (V0)
+                const resV0 = await fetch(urlV0);
+                const level = await resV0.text();
+                document.getElementById('waterLevel').innerText = level;
+
+                // 2. Fetch current status string (V1)
+                const resV1 = await fetch(urlV1);
+                const status = await resV1.text();
+                
+                // 3. Update the text and CSS color scheme dynamically
+                const badge = document.getElementById('statusLabel');
+                badge.innerText = status;
+                
+                // Reset classes cleanly
+                badge.className = "status-badge"; 
+                if (status.includes("SAFE")) {
+                    badge.classList.add("safe");
+                } else if (status.includes("CAUTION")) {
+                    badge.classList.add("caution");
+                } else if (status.includes("DANGER")) {
+                    badge.classList.add("danger");
+                }
+
+            } catch (error) {
+                console.error("Error fetching data from Blynk:", error);
+            }
+        }
+
+        // Run the function immediately on load, then every 2000ms (2 seconds)
+        fetchBlynkData();
+        setInterval(fetchBlynkData, 2000);
+    </script>
+</body>
+</html>
