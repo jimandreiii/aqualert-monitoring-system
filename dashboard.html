@@ -32,7 +32,7 @@
         window.onload = async () => {
             const { data: { user } } = await sb.auth.getUser();
             if (!user) {
-                window.location.href = "login.html";
+                window.location.href = "./login.html";
             } else {
                 document.getElementById('userDisplay').innerText = `Logged in as: ${user.email}`;
                 startLiveStream();
@@ -70,7 +70,7 @@
         async function triggerLogout() {
             await sb.auth.signOut();
             clearInterval(trackingInterval);
-            window.location.href = "login.html";
+            window.location.href = "./login.html";
         }
     </script>
 </body>
