@@ -26,11 +26,11 @@
         const SUPABASE_KEY = "sb_publishable_n0WvrKIGtpzxopGbY3vcjQ_6ljoAm49";
         const BLYNK_TOKEN  = "gHS7cRliApxnJJm6q-VZWic4VTBc4h3J";
         
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         let trackingInterval;
 
         window.onload = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
+            const { data: { user } } = await sb.auth.getUser();
             if (!user) {
                 window.location.href = "login.html";
             } else {
@@ -68,7 +68,7 @@
         }
 
         async function triggerLogout() {
-            await supabase.auth.signOut();
+            await sb.auth.signOut();
             clearInterval(trackingInterval);
             window.location.href = "login.html";
         }
