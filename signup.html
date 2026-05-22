@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AquAlert - Sign Up</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+    <div class="card">
+        <h1>AquAlert</h1>
+        <p>Create an account to start monitoring</p>
+        <input type="email" id="email" placeholder="Email Address">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="handleSignUp()">Create Account</button>
+        <div class="link">Already have an account? <a href="login.html">Log In</a></div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = "https://tuzpazwkcmhmjpbzongj.supabase.co/rest/v1/";
+        const SUPABASE_KEY = "sb_publishable_n0WvrKIGtpzxopGbY3vcjQ_6ljoAm49";
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        async function handleSignUp() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            if(!email || !password) return alert("Please fill in all fields.");
+
+            const { data, error } = await supabase.auth.signUp({ email, password });
+            if (error) {
+                alert(error.message);
+            } else {
+                alert("Account created successfully! Redirecting to login...");
+                window.location.href = "login.html";
+            }
+        }
+    </script>
+</body>
+</html>
