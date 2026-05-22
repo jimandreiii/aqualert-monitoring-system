@@ -21,7 +21,7 @@
     <script>
         const SUPABASE_URL = "https://tuzpazwkcmhmjpbzongj.supabase.co/rest/v1/";
         const SUPABASE_KEY = "sb_publishable_n0WvrKIGtpzxopGbY3vcjQ_6ljoAm49";
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         async function handleSignUp() {
             const email = document.getElementById('email').value;
@@ -29,7 +29,7 @@
 
             if(!email || !password) return alert("Please fill in all fields.");
 
-            const { data, error } = await supabase.auth.signUp({ email, password });
+            const { data, error } = await sb.auth.signUp({ email, password });
             if (error) {
                 alert(error.message);
             } else {
